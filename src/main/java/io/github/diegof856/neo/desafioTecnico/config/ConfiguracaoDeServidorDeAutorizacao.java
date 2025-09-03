@@ -100,8 +100,5 @@ public class ConfiguracaoDeServidorDeAutorizacao {
                 .keyID(UUID.randomUUID().toString())
                 .build();
     }
-    @Bean
-    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource){
-        return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
-    }
+
 }

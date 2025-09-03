@@ -23,7 +23,7 @@ public class ConfiguracaoSeguranca {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, FiltroCustomizadoAutenticacaoJwt filtroCustomizadoAutenticacaoJwt)throws Exception{
         return http
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .authorizeHttpRequests(authorize ->{
                     authorize.requestMatchers("/h2-console/**").permitAll();

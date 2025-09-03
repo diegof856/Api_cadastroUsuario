@@ -41,7 +41,7 @@ public class PessoaFisicaController implements ControllerGenerico {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> atualizar(@PathVariable("id") String id, @RequestBody PessoaFisicaDTO pessoaFisicaDTO) {
+    public ResponseEntity<Void> atualizar(@PathVariable("id") String id, @RequestBody @Valid PessoaFisicaDTO pessoaFisicaDTO) {
         Optional<PessoaFisica> pessoaOptional = this.service.obterPorId(UUID.fromString(id));
         if (pessoaOptional.isEmpty()) {
             return ResponseEntity.notFound().build();

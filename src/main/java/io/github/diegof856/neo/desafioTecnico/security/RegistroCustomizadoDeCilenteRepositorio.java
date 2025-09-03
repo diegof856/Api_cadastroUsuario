@@ -45,7 +45,7 @@ public class RegistroCustomizadoDeCilenteRepositorio implements RegisteredClient
                 .withId(client.getId().toString())
                 .clientId(client.getClienteId())
                 .clientSecret(client.getClienteSegredo())
-                .redirectUri(client.getRedirectURI())
+                .redirectUri(client.getRedirectUri())
                 .scope(client.getScopo()).clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
