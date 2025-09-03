@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +52,12 @@ public class ClienteController implements ControllerGenerico{
         return this.service.obterPorId(UUID.fromString(id)).map(cliente ->{
             this.service.deletar(cliente);
             return ResponseEntity.noContent().build();
+        }).orElseGet(()->ResponseEntity.notFound().build());
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<ClienteDTO> obterDetalhes(@PathVariable("id")String id){
+        return this.service.obterPorId(UUID.fromString(id)).map(cliente -> {
+            return ResponseEntity.ok(this.mapper.paraDTO(cliente));
         }).orElseGet(()->ResponseEntity.notFound().build());
     }
 
