@@ -7,6 +7,8 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface UsuarioMapper {
+    @Mapping(source = "login", target = "login")
+    @Mapping(source = "senha", target = "senha")
     @Mapping(source = "roles", target = "roles")
     Usuario paraEntidade(UsuarioDTO dto);
 }

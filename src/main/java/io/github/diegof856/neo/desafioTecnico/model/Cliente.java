@@ -19,6 +19,6 @@ public class Cliente {
     private String clienteSegredo;
     @Column(name = "redirect_uri")
     private String redirectURI;
-    @Column(name = "scopo")
+    @Column(name = "scope")
     private String scopo;
 }

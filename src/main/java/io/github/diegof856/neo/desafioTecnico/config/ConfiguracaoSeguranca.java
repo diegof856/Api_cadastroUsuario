@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationFilter;
@@ -22,12 +23,14 @@ public class ConfiguracaoSeguranca {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, FiltroCustomizadoAutenticacaoJwt filtroCustomizadoAutenticacaoJwt)throws Exception{
         return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
+                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .authorizeHttpRequests(authorize ->{
+                    authorize.requestMatchers("/h2-console/**").permitAll();
                     authorize.requestMatchers(HttpMethod.POST,"/usuarios").permitAll();
                     authorize.anyRequest().authenticated();
                 })
+                .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer(oauth2RS -> oauth2RS.jwt(Customizer.withDefaults()))
                 .addFilterAfter(filtroCustomizadoAutenticacaoJwt, BearerTokenAuthenticationFilter.class)
                 .build();
@@ -44,6 +47,10 @@ public class ConfiguracaoSeguranca {
                 "/webjars/**"
 
         );
+    }
+    @Bean
+    public GrantedAuthorityDefaults grantedAuthorityDefaults(){
+        return new GrantedAuthorityDefaults("");
     }
     @Bean
     public JwtAuthenticationConverter ConverterAutenticacaojwt(){

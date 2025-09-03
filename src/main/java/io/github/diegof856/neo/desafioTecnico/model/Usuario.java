@@ -1,5 +1,6 @@
 package io.github.diegof856.neo.desafioTecnico.model;
 
+import io.github.diegof856.neo.desafioTecnico.model.conversor.Conversor;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.Type;
@@ -21,7 +22,7 @@ public class Usuario {
     @Column
     private String senha;
 
-    @Convert(converter = RolesConverter.class)
+    @Convert(converter = Conversor.class)
     @Column(name = "roles")
     private List<String> roles;
 

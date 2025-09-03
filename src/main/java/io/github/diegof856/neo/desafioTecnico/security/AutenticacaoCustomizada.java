@@ -5,17 +5,21 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Getter
 public class AutenticacaoCustomizada implements Authentication {
     private final Usuario usuario;
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+    public Collection<GrantedAuthority> getAuthorities() {
+        return this.usuario.getRoles()
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(role))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -25,17 +29,17 @@ public class AutenticacaoCustomizada implements Authentication {
 
     @Override
     public Object getDetails() {
-        return null;
+        return this.usuario;
     }
 
     @Override
     public Object getPrincipal() {
-        return null;
+        return this.usuario;
     }
 
     @Override
     public boolean isAuthenticated() {
-        return false;
+        return true;
     }
 
     @Override
@@ -45,6 +49,6 @@ public class AutenticacaoCustomizada implements Authentication {
 
     @Override
     public String getName() {
-        return "";
+        return this.usuario.getLogin();
     }
 }
