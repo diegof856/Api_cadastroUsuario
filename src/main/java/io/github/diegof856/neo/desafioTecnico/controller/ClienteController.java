@@ -28,13 +28,25 @@ public class ClienteController implements ControllerGenerico{
     @PreAuthorize("hasRole('GERENTE')")
     @Operation(summary = "Salvar", description = "Cadastrar um novo cliente")
     @ApiResponses({
-            @ApiResponse(responseCode = "201",description = "Cadastrado com sucesso")
+            @ApiResponse(responseCode = "201",description = "Cadastrado com sucesso"),
+            @ApiResponse(responseCode = "422",description = "Erro de validação"),
+            @ApiResponse(responseCode = "409",description = "Cliente já cadastrado"),
+
     })
     public ResponseEntity<Object> salvar(@RequestBody @Valid ClienteDTO clienteDTO) {
        Cliente cliente = this.mapper.paraEntidade(clienteDTO);
         return ResponseEntity.created(gerarHeaderLocation(this.service.salvar(cliente).getId())).build();
     }
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('GERENTE')")
+    @Operation(summary = "Atualizar", description = "Atualiza um cliente por id")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204",description = "Atualizado com sucesso"),
+            @ApiResponse(responseCode = "404",description = "Cliente não encontrado"),
+            @ApiResponse(responseCode = "409",description = "Cliente já cadastrado")
+
+
+    })
     public ResponseEntity<Object>atualizar(@PathVariable("id")String id, @RequestBody @Valid ClienteDTO clienteDTO){
         return this.service.obterPorId(UUID.fromString(id)).map(cliente ->{
             Cliente clienteAux = this.mapper.paraEntidade(clienteDTO);
@@ -48,6 +60,13 @@ public class ClienteController implements ControllerGenerico{
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('GERENTE')")
+    @Operation(summary = "Deletar", description = "Deleta um cliente por id")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204",description = "Deletado com sucesso"),
+            @ApiResponse(responseCode = "404",description = "Cliente não encontrado")
+    })
+
     public ResponseEntity<Object> deletar(@PathVariable("id")String id){
         return this.service.obterPorId(UUID.fromString(id)).map(cliente ->{
             this.service.deletar(cliente);
@@ -55,6 +74,11 @@ public class ClienteController implements ControllerGenerico{
         }).orElseGet(()->ResponseEntity.notFound().build());
     }
     @GetMapping("/{id}")
+    @Operation(summary = "Obter Detalhes", description = "Obtem detalhes um cliente por id")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200",description = "Encontrado com sucesso"),
+            @ApiResponse(responseCode = "404",description = "Cliente não encontrado")
+    })
     public ResponseEntity<ClienteDTO> obterDetalhes(@PathVariable("id")String id){
         return this.service.obterPorId(UUID.fromString(id)).map(cliente -> {
             return ResponseEntity.ok(this.mapper.paraDTO(cliente));
